@@ -9,13 +9,12 @@
 
     Referência: https://github.com/Iuri-Almeida/chess-system-java
 """
-from boardgame.position import Position
+from boardgame.board import Board
 
 
 def main() -> None:
 
-    pos = Position(3, 4)
-    print(pos)
+    board = Board(8, 8)
 
 
 if __name__ == '__main__':

@@ -1,10 +1,10 @@
 class Position(object):
 
-    def __init__(self, row: int, column: int):
+    def __init__(self, row: int, column: int) -> None:
         self.__row = row
         self.__column = column
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f'{self.row}, {self.column}'
 
     @property
@@ -20,5 +20,5 @@ class Position(object):
         return self.__column
 
     @column.setter
-    def column(self, new_column: int):
+    def column(self, new_column: int) -> None:
         self.__column = new_column
