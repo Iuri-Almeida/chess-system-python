@@ -9,12 +9,15 @@
 
     Referência: https://github.com/Iuri-Almeida/chess-system-java
 """
-from boardgame.board import Board
+from chess.chess_match import ChessMatch
+from application.ui import UI
 
 
 def main() -> None:
 
-    board = Board(8, 8)
+    chess_match = ChessMatch()
+
+    UI.print_board(chess_match.get_pieces())
 
 
 if __name__ == '__main__':

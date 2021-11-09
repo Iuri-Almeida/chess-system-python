@@ -1,6 +1,7 @@
 from typing import List, Union
 
 from boardgame.piece import Piece
+from boardgame.position import Position
 
 
 class Board(object):
@@ -17,3 +18,9 @@ class Board(object):
     @property
     def columns(self) -> int:
         return self.__columns
+
+    def piece_by_row_and_column(self, row: int, column: int) -> Union[Piece, None]:
+        return self.__pieces[row][column]
+
+    def piece_by_position(self, position: Position):
+        return self.__pieces[position.row][position.column]
