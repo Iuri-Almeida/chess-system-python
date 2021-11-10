@@ -11,11 +11,12 @@
 """
 from typing import List
 
-from chess.chess_match import ChessMatch
-from chess.chess_position import ChessPosition
-from chess.chess_piece import ChessPiece
-from chess.chess_exception import ChessException
 from application.ui import UI
+
+from chess.chess_exception import ChessException
+from chess.chess_match import ChessMatch
+from chess.chess_piece import ChessPiece
+from chess.chess_position import ChessPosition
 
 
 def main() -> None:
@@ -33,6 +34,7 @@ def main() -> None:
             source: ChessPosition = UI.read_chess_position('Source: ')
 
             possible_moves = chess_match.possible_moves(source)
+
             UI.clear_screen()
             UI.print_board_possible_moves(chess_match.get_pieces(), possible_moves)
 

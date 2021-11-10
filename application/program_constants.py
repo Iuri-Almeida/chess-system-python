@@ -1,4 +1,4 @@
-from application.color_constants import ColorConstants
+from application.ansi_color_constants import ANSIColorConstants
 
 
 class ProgramConstants(object):
@@ -15,9 +15,9 @@ class ProgramConstants(object):
     NO_CHECK = 'NO CHECK'
 
     # Game Colors
-    BLACK_PIECE_COLOR = ColorConstants.COLOR_YELLOW
-    WHITE_PIECE_COLOR = ColorConstants.COLOR_WHITE
-    BACKGROUND_COLOR = ColorConstants.BACKGROUND_DARK_BLUE
-    INDICATORS_COLOR = ColorConstants.COLOR_GREEN
-    GAME_STATUS_COLOR = ColorConstants.COLOR_RED
-    RESET_COLOR = ColorConstants.RESET
+    BLACK_PIECE_COLOR = ANSIColorConstants.ANSI_YELLOW
+    WHITE_PIECE_COLOR = ANSIColorConstants.ANSI_WHITE
+    BACKGROUND_COLOR = ANSIColorConstants.ANSI_BLUE_BACKGROUND
+    INDICATORS_COLOR = ANSIColorConstants.ANSI_GREEN
+    GAME_STATUS_COLOR = ANSIColorConstants.ANSI_RED
+    RESET_COLOR = ANSIColorConstants.ANSI_RESET
