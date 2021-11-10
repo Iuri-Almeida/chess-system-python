@@ -19,7 +19,7 @@ class UI(object):
     def read_chess_position(txt: str) -> ChessPosition:
 
         try:
-            s: str = input(txt)
+            s: str = input(txt).lower()
 
             column: str = s[0]
             row: int = int(s[1:])
@@ -112,15 +112,9 @@ class UI(object):
     @staticmethod
     def __print_captured_pieces(captured: List[ChessPiece]) -> None:
 
-        white: List[ChessPiece] = list(filter(lambda x: x.color == Color.WHITE, captured))
-        black: List[ChessPiece] = list(filter(lambda x: x.color == Color.BLACK, captured))
-
-        for i in range(len(white)):
-            white[i] = str(white[i])
-
-        for i in range(len(black)):
-            black[i] = str(black[i])
+        white: List[str] = [str(x) for x in captured if x.color == Color.WHITE]
+        black: List[str] = [str(x) for x in captured if x.color == Color.BLACK]
 
         print('Captured pieces:')
-        print(f'{ProgramConstants.WHITE_PIECE_COLOR}White: {", ".join(white)}{ProgramConstants.RESET_COLOR}')
-        print(f'{ProgramConstants.BLACK_PIECE_COLOR}Black: {", ".join(black)}{ProgramConstants.RESET_COLOR}')
+        print(f'{ProgramConstants.WHITE_PIECE_COLOR}White: {white}{ProgramConstants.RESET_COLOR}')
+        print(f'{ProgramConstants.BLACK_PIECE_COLOR}Black: {black}{ProgramConstants.RESET_COLOR}')
