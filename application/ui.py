@@ -1,4 +1,5 @@
 from typing import List, Union
+from os import system
 
 from chess.chess_piece import ChessPiece
 from chess.chess_position import ChessPosition
@@ -7,6 +8,10 @@ from application.color_constants import ColorConstants
 
 
 class UI(object):
+
+    @staticmethod
+    def clear_screen() -> None:
+        system('clear')
 
     @staticmethod
     def read_chess_position(txt: str) -> ChessPosition:

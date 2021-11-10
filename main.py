@@ -12,6 +12,7 @@
 from chess.chess_match import ChessMatch
 from chess.chess_position import ChessPosition
 from chess.chess_piece import ChessPiece
+from chess.chess_exception import ChessException
 from application.ui import UI
 
 
@@ -21,14 +22,18 @@ def main() -> None:
 
     while True:
 
-        UI.print_board(chess_match.get_pieces())
+        try:
+            UI.clear_screen()
 
-        source: ChessPosition = UI.read_chess_position('Source: ')
-        target: ChessPosition = UI.read_chess_position('Target: ')
+            UI.print_board(chess_match.get_pieces())
 
-        captured_piece: ChessPiece = chess_match.perform_chess_move(source, target)
+            source: ChessPosition = UI.read_chess_position('Source: ')
+            target: ChessPosition = UI.read_chess_position('Target: ')
 
-        print(captured_piece)
+            captured_piece: ChessPiece = chess_match.perform_chess_move(source, target)
+
+        except (ChessException, ValueError):
+            input('\nClick ENTER to continue.')
 
 
 if __name__ == '__main__':
