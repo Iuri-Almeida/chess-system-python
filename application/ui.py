@@ -28,9 +28,12 @@ class UI(object):
             raise ValueError('Error reading ChessPosition. Valida values are from a1 to h8.')
 
     @staticmethod
-    def print_match(chess_match: ChessMatch) -> None:
+    def print_match(chess_match: ChessMatch, captured: List[ChessPiece]) -> None:
 
         UI.print_board(chess_match.get_pieces())
+
+        print()
+        UI.__print_captured_pieces(captured)
 
         print(f'\nTurn: {chess_match.turn}')
         print(f'Waiting player: {chess_match.current_player}')
@@ -47,7 +50,7 @@ class UI(object):
 
             for j in range(columns):
 
-                UI.print_piece(pieces[i][j], False)
+                UI.__print_piece(pieces[i][j], False)
 
             print()
 
@@ -66,14 +69,14 @@ class UI(object):
 
             for j in range(columns):
 
-                UI.print_piece(pieces[i][j], possible_moves[i][j])
+                UI.__print_piece(pieces[i][j], possible_moves[i][j])
 
             print()
 
         print('  a b c d e f g h')
 
     @staticmethod
-    def print_piece(piece: ChessPiece, background: bool) -> None:
+    def __print_piece(piece: ChessPiece, background: bool) -> None:
 
         if background:
             print(ColorConstants.BACKGROUND_DARK_BLUE, end='')
@@ -87,3 +90,19 @@ class UI(object):
                 print(f'{ColorConstants.COLOR_YELLOW}{piece}{ColorConstants.RESET}', end='')
 
         print(' ', end='')
+
+    @staticmethod
+    def __print_captured_pieces(captured: List[ChessPiece]) -> None:
+
+        white: List[ChessPiece] = list(filter(lambda x: x.color == Color.WHITE, captured))
+        black: List[ChessPiece] = list(filter(lambda x: x.color == Color.BLACK, captured))
+
+        for i in range(len(white)):
+            white[i] = str(white[i])
+
+        for i in range(len(black)):
+            black[i] = str(black[i])
+
+        print('Captured pieces:')
+        print(f'{ColorConstants.COLOR_WHITE}White: {", ".join(white)}{ColorConstants.RESET}')
+        print(f'{ColorConstants.COLOR_YELLOW}Black: {", ".join(black)}{ColorConstants.RESET}')

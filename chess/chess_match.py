@@ -18,7 +18,10 @@ class ChessMatch(object):
         self.__board = Board(ChessConstants.ROWS, ChessConstants.COLUMNS)
         self.__turn: int = 1
         self.__current_player: Color = Color.WHITE
-        self.initial_setup()
+        self.__pieces_on_the_board: List[Piece] = []
+        self.__captured_pieces: List[Piece] = []
+
+        self.__initial_setup()
 
     @property
     def turn(self) -> int:
@@ -49,7 +52,7 @@ class ChessMatch(object):
     def possible_moves(self, source_position: ChessPosition) -> List[List[bool]]:
         position: Position = source_position.to_position()
 
-        self.validate_source_position(position)
+        self.__validate_source_position(position)
 
         return self.__board.piece_by_position(position).possible_moves()
 
@@ -58,25 +61,29 @@ class ChessMatch(object):
         source: Position = source_position.to_position()
         target: Position = target_position.to_position()
 
-        self.validate_source_position(source)
-        self.validate_target_position(source, target)
+        self.__validate_source_position(source)
+        self.__validate_target_position(source, target)
 
-        captured_piece = self.make_move(source, target)
+        captured_piece = self.__make_move(source, target)
 
-        self.next_turn()
+        self.__next_turn()
 
         return captured_piece
 
-    def make_move(self, source: Position, target: Position) -> Piece:
+    def __make_move(self, source: Position, target: Position) -> Piece:
 
         piece: Piece = self.__board.remove_piece(source)
         captured_piece: Piece = self.__board.remove_piece(target)
 
         self.__board.place_piece(piece, target)
 
+        if captured_piece is not None:
+            self.__pieces_on_the_board.remove(captured_piece)
+            self.__captured_pieces.append(captured_piece)
+
         return captured_piece
 
-    def validate_source_position(self, position: Position) -> None:
+    def __validate_source_position(self, position: Position) -> None:
 
         if not self.__board.there_is_a_piece(position):
             raise ChessException('There is no piece on source position.')
@@ -87,31 +94,33 @@ class ChessMatch(object):
         if not self.__board.piece_by_position(position).is_there_any_possible_move():
             raise ChessException('There is no possible moves for the chosen piece.')
 
-    def validate_target_position(self, source: Position, target: Position) -> None:
+    def __validate_target_position(self, source: Position, target: Position) -> None:
         if not self.__board.piece_by_position(source).possible_move(target):
             raise ChessException('The chosen piece cannot move to target position.')
 
-    def next_turn(self) -> None:
+    def __next_turn(self) -> None:
         self.__turn += 1
         self.__current_player = Color.BLACK if self.__current_player == Color.WHITE else Color.WHITE
 
-    def place_new_piece(self, column: str, row: int, piece: ChessPiece) -> None:
+    def __place_new_piece(self, column: str, row: int, piece: ChessPiece) -> None:
         self.__board.place_piece(piece, ChessPosition(column, row).to_position())
 
-    def initial_setup(self) -> None:
+        self.__pieces_on_the_board.append(piece)
+
+    def __initial_setup(self) -> None:
 
         # white players
-        self.place_new_piece('c', 1, Rook(self.__board, Color.WHITE))
-        self.place_new_piece('c', 2, Rook(self.__board, Color.WHITE))
-        self.place_new_piece('d', 2, Rook(self.__board, Color.WHITE))
-        self.place_new_piece('e', 2, Rook(self.__board, Color.WHITE))
-        self.place_new_piece('e', 1, Rook(self.__board, Color.WHITE))
-        self.place_new_piece('d', 1, King(self.__board, Color.WHITE))
+        self.__place_new_piece('c', 1, Rook(self.__board, Color.WHITE))
+        self.__place_new_piece('c', 2, Rook(self.__board, Color.WHITE))
+        self.__place_new_piece('d', 2, Rook(self.__board, Color.WHITE))
+        self.__place_new_piece('e', 2, Rook(self.__board, Color.WHITE))
+        self.__place_new_piece('e', 1, Rook(self.__board, Color.WHITE))
+        self.__place_new_piece('d', 1, King(self.__board, Color.WHITE))
 
         # black players
-        self.place_new_piece('c', 7, Rook(self.__board, Color.BLACK))
-        self.place_new_piece('c', 8, Rook(self.__board, Color.BLACK))
-        self.place_new_piece('d', 7, Rook(self.__board, Color.BLACK))
-        self.place_new_piece('e', 7, Rook(self.__board, Color.BLACK))
-        self.place_new_piece('e', 8, Rook(self.__board, Color.BLACK))
-        self.place_new_piece('d', 8, King(self.__board, Color.BLACK))
+        self.__place_new_piece('c', 7, Rook(self.__board, Color.BLACK))
+        self.__place_new_piece('c', 8, Rook(self.__board, Color.BLACK))
+        self.__place_new_piece('d', 7, Rook(self.__board, Color.BLACK))
+        self.__place_new_piece('e', 7, Rook(self.__board, Color.BLACK))
+        self.__place_new_piece('e', 8, Rook(self.__board, Color.BLACK))
+        self.__place_new_piece('d', 8, King(self.__board, Color.BLACK))

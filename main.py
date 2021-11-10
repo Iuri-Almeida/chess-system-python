@@ -9,6 +9,8 @@
 
     Referência: https://github.com/Iuri-Almeida/chess-system-java
 """
+from typing import List
+
 from chess.chess_match import ChessMatch
 from chess.chess_position import ChessPosition
 from chess.chess_piece import ChessPiece
@@ -19,13 +21,14 @@ from application.ui import UI
 def main() -> None:
 
     chess_match = ChessMatch()
+    captured: List[ChessPiece] = []
 
     while True:
 
         try:
             UI.clear_screen()
 
-            UI.print_match(chess_match)
+            UI.print_match(chess_match, captured)
 
             source: ChessPosition = UI.read_chess_position('Source: ')
 
@@ -36,6 +39,9 @@ def main() -> None:
             target: ChessPosition = UI.read_chess_position('Target: ')
 
             captured_piece: ChessPiece = chess_match.perform_chess_move(source, target)
+
+            if captured_piece is not None:
+                captured.append(captured_piece)
 
         except (ChessException, ValueError) as e:
             print(e)
