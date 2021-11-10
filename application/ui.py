@@ -3,6 +3,7 @@ from os import system
 
 from chess.chess_piece import ChessPiece
 from chess.chess_position import ChessPosition
+from chess.chess_constants import ChessConstants
 from chess.chess_match import ChessMatch
 from chess.color import Color
 from application.color_constants import ColorConstants
@@ -30,15 +31,28 @@ class UI(object):
     @staticmethod
     def print_match(chess_match: ChessMatch, captured: List[ChessPiece]) -> None:
 
+        game_status: str = ChessConstants.NO_CHECK
+
         UI.print_board(chess_match.get_pieces())
 
         print()
         UI.__print_captured_pieces(captured)
 
         print(f'\nTurn: {chess_match.turn}')
-        print(f'Waiting player: {chess_match.current_player}')
 
-        print(f'\nGame status: {"CHECK!" if chess_match.check else "NO CHECK!"}')
+        if not chess_match.checkmate:
+            print(f'Waiting player: {chess_match.current_player}')
+            if chess_match.check:
+                game_status = ChessConstants.CHECK
+        else:
+            game_status = ChessConstants.CHECKMATE
+
+            player: Color = chess_match.current_player
+
+            print(f'Winner: {ColorConstants.COLOR_YELLOW if player == Color.BLACK else ColorConstants.COLOR_WHITE}'
+                  f'{player}{ColorConstants.RESET}')
+
+        print(f'\nGame status: {game_status}')
 
     @staticmethod
     def print_board(pieces: List[List[Union[ChessPiece, None]]]) -> None:
@@ -48,7 +62,7 @@ class UI(object):
 
         for i in range(rows):
 
-            print(f'{rows - i} ', end='')
+            print(f'{ColorConstants.COLOR_GREEN}{rows - i} {ColorConstants.RESET}', end='')
 
             for j in range(columns):
 
@@ -56,7 +70,7 @@ class UI(object):
 
             print()
 
-        print('  a b c d e f g h')
+        print(f'{ColorConstants.COLOR_GREEN}  a b c d e f g h{ColorConstants.RESET}')
 
     @staticmethod
     def print_board_possible_moves(
@@ -67,7 +81,7 @@ class UI(object):
 
         for i in range(rows):
 
-            print(f'{rows - i} ', end='')
+            print(f'{ColorConstants.COLOR_GREEN}{rows - i} {ColorConstants.RESET}', end='')
 
             for j in range(columns):
 
@@ -75,7 +89,7 @@ class UI(object):
 
             print()
 
-        print('  a b c d e f g h')
+        print(f'{ColorConstants.COLOR_GREEN}  a b c d e f g h{ColorConstants.RESET}')
 
     @staticmethod
     def __print_piece(piece: ChessPiece, background: bool) -> None:
@@ -87,7 +101,7 @@ class UI(object):
             print(f'-{ColorConstants.RESET}', end='')
         else:
             if piece.color == Color.WHITE:
-                print(f'{piece}{ColorConstants.RESET}', end='')
+                print(f'{ColorConstants.COLOR_WHITE}{piece}{ColorConstants.RESET}', end='')
             else:
                 print(f'{ColorConstants.COLOR_YELLOW}{piece}{ColorConstants.RESET}', end='')
 

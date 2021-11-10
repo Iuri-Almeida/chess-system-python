@@ -23,7 +23,7 @@ def main() -> None:
     chess_match = ChessMatch()
     captured: List[ChessPiece] = []
 
-    while True:
+    while not chess_match.checkmate:
 
         try:
             UI.clear_screen()
@@ -46,6 +46,9 @@ def main() -> None:
         except (ChessException, ValueError) as e:
             print(e)
             input('\nClick ENTER to continue.')
+
+    UI.clear_screen()
+    UI.print_match(chess_match, captured)
 
 
 if __name__ == '__main__':

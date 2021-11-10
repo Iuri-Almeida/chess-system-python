@@ -21,6 +21,7 @@ class ChessMatch(object):
         self.__captured_pieces: List[Piece] = []
         self.__board = Board(ChessConstants.ROWS, ChessConstants.COLUMNS)
         self.__check: bool = False
+        self.__checkmate: bool = False
 
         self.__initial_setup()
 
@@ -35,6 +36,10 @@ class ChessMatch(object):
     @property
     def check(self) -> bool:
         return self.__check
+
+    @property
+    def checkmate(self) -> bool:
+        return self.__checkmate
 
     def get_pieces(self) -> List[List[Union[ChessPiece, None]]]:
 
@@ -77,7 +82,10 @@ class ChessMatch(object):
 
         self.__check = self.__test_check(self.__opponent(self.__current_player))
 
-        self.__next_turn()
+        self.__checkmate = self.__test_checkmate(self.__opponent(self.__current_player))
+
+        if not self.checkmate:
+            self.__next_turn()
 
         return captured_piece
 
@@ -158,6 +166,36 @@ class ChessMatch(object):
                 return True
 
         return False
+
+    def __test_checkmate(self, color: Color) -> bool:
+
+        if not self.__test_check(color):
+            return False
+
+        pieces: List[Piece] = list(filter(lambda x: x.color == color, self.__pieces_on_the_board))
+
+        for piece in pieces:
+
+            mat: List[List[bool]] = piece.possible_moves()
+
+            rows: int = len(mat)
+            columns: int = len(mat[0])
+
+            for i in range(rows):
+                for j in range(columns):
+                    if mat[i][j]:
+
+                        source: Position = piece.chess_position().to_position()
+                        target: Position = Position(i, j)
+
+                        captured_piece: Piece = self.__make_move(source, target)
+                        test_check: bool = self.__test_check(color)
+                        self.__undo_move(source, target, captured_piece)
+
+                        if not test_check:
+                            return False
+
+            return True
 
     def __place_new_piece(self, column: str, row: int, piece: ChessPiece) -> None:
         self.__board.place_piece(piece, ChessPosition(column, row).to_position())
