@@ -27,6 +27,7 @@ class ChessMatch(object):
         self.__check: bool = False
         self.__checkmate: bool = False
         self.__en_passant_vulnerable: Union[ChessPiece, None] = None
+        self.__promoted: Union[ChessPiece, None] = None
 
         self.__initial_setup()
 
@@ -49,6 +50,10 @@ class ChessMatch(object):
     @property
     def en_passant_vulnerable(self) -> Union[ChessPiece, None]:
         return self.__en_passant_vulnerable
+
+    @property
+    def promoted(self) -> Union[ChessPiece, None]:
+        return self.__promoted
 
     def get_pieces(self) -> List[List[Union[ChessPiece, None]]]:
 
@@ -91,6 +96,14 @@ class ChessMatch(object):
 
         moved_piece: ChessPiece = self.__board.piece_by_position(target)
 
+        # SPECIAL MOVE - PROMOTION
+        self.__promoted = None
+        if isinstance(moved_piece, Pawn) and\
+            ((moved_piece.color == Color.WHITE and target.row == 0) or
+             (moved_piece.color == Color.BLACK and target.row == 7)):
+            self.__promoted = self.__board.piece_by_position(target)
+            self.__promoted = self.replace_promoted_piece('Q')
+
         self.__check = self.__test_check(self.__opponent(self.__current_player))
 
         self.__checkmate = self.__test_checkmate(self.__opponent(self.__current_player))
@@ -105,6 +118,37 @@ class ChessMatch(object):
             self.__en_passant_vulnerable = None
 
         return captured_piece
+
+    def replace_promoted_piece(self, promotion_type: str) -> ChessPiece:
+
+        if self.promoted is None:
+            raise ValueError('There is no piece to be promoted.')
+
+        if not promotion_type == 'B' and not promotion_type == 'N' and not promotion_type == 'R' and not promotion_type == 'Q':
+            raise ValueError('Invalid type for promotion.')
+
+        pos: Position = self.promoted.chess_position().to_position()
+        piece: Piece = self.__board.remove_piece(pos)
+
+        self.__pieces_on_the_board.remove(piece)
+
+        new_piece: ChessPiece = self.__new_piece(promotion_type, self.promoted.color)
+
+        self.__board.place_piece(new_piece, pos)
+        self.__pieces_on_the_board.append(new_piece)
+
+        return new_piece
+
+    def __new_piece(self, promotion_type: str, color: Color) -> ChessPiece:
+
+        if promotion_type == 'B':
+            return Bishop(self.__board, color)
+        elif promotion_type == 'N':
+            return Knight(self.__board, color)
+        elif promotion_type == 'R':
+            return Rook(self.__board, color)
+        else:
+            return Queen(self.__board, color)
 
     def __make_move(self, source: Position, target: Position) -> Piece:
 

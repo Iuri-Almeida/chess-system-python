@@ -43,6 +43,11 @@ def main() -> None:
             if captured_piece is not None:
                 captured.append(captured_piece)
 
+            if chess_match.promoted is not None:
+
+                promotion_type: str = input('Enter the piece for promotion (B/N/R/Q): ').upper()
+                chess_match.replace_promoted_piece(promotion_type)
+
         except (ChessException, ValueError) as e:
             print(e)
             input('\nClick ENTER to continue.')
