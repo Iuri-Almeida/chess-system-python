@@ -37,7 +37,7 @@ class Board(object):
 
         return self.__pieces[row][column]
 
-    def piece_by_position(self, position: Position):
+    def piece_by_position(self, position: Position) -> Union[Piece, None]:
 
         if not self.position_exists_by_position(position):
             raise BoardException('Position not on the board.')
@@ -54,6 +54,24 @@ class Board(object):
 
         self.__pieces[row][column] = piece
         piece._position = position
+
+    def remove_piece(self, position: Position) -> Union[Piece, None]:
+
+        if not self.position_exists_by_position(position):
+            raise BoardException('Position not on the board.')
+
+        if self.piece_by_position(position) is None:
+            return None
+
+        piece: Piece = self.piece_by_position(position)
+        piece._position = None
+
+        row: int = position.row
+        column: int = position.column
+
+        self.__pieces[row][column] = None
+
+        return piece
 
     def position_exists(self, row: int, column: int) -> bool:
         return 0 <= row < self.__rows and 0 <= column < self.__columns

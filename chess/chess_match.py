@@ -1,7 +1,9 @@
 from typing import List, Union
 
 from boardgame.board import Board
+from boardgame.piece import Piece
 from boardgame.position import Position
+from chess.chess_exception import ChessException
 from chess.chess_piece import ChessPiece
 from chess.chess_position import ChessPosition
 from chess.color import Color
@@ -33,6 +35,31 @@ class ChessMatch(object):
                 pieces[i][j] = self.__board.piece_by_row_and_column(i, j)
 
         return pieces
+
+    def perform_chess_move(self, source_position: ChessPosition, target_position: ChessPosition) -> ChessPiece:
+
+        source: Position = source_position.to_position()
+        target: Position = target_position.to_position()
+
+        self.validate_source_position(source)
+
+        captured_piece = self.make_move(source, target)
+
+        return captured_piece
+
+    def make_move(self, source: Position, target: Position) -> Piece:
+
+        piece: Piece = self.__board.remove_piece(source)
+        captured_piece: Piece = self.__board.remove_piece(target)
+
+        self.__board.place_piece(piece, target)
+
+        return captured_piece
+
+    def validate_source_position(self, position: Position) -> None:
+
+        if not self.__board.there_is_a_piece(position):
+            raise ChessException('There is no piece on source position.')
 
     def place_new_piece(self, column: str, row: int, piece: ChessPiece) -> None:
         self.__board.place_piece(piece, ChessPosition(column, row).to_position())
