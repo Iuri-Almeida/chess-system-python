@@ -12,6 +12,7 @@ from chess.pieces.rook import Rook
 from chess.pieces.king import King
 from chess.pieces.pawn import Pawn
 from chess.pieces.bishop import Bishop
+from chess.pieces.knight import Knight
 
 
 class ChessMatch(object):
@@ -212,9 +213,11 @@ class ChessMatch(object):
 
         # white players
         self.__place_new_piece('a', 1, Rook(self.__board, Color.WHITE))
+        self.__place_new_piece('b', 1, Knight(self.__board, Color.WHITE))
         self.__place_new_piece('c', 1, Bishop(self.__board, Color.WHITE))
         self.__place_new_piece('e', 1, King(self.__board, Color.WHITE))
         self.__place_new_piece('f', 1, Bishop(self.__board, Color.WHITE))
+        self.__place_new_piece('g', 1, Knight(self.__board, Color.WHITE))
         self.__place_new_piece('h', 1, Rook(self.__board, Color.WHITE))
         self.__place_new_piece('a', 2, Pawn(self.__board, Color.WHITE))
         self.__place_new_piece('b', 2, Pawn(self.__board, Color.WHITE))
@@ -227,9 +230,11 @@ class ChessMatch(object):
 
         # black players
         self.__place_new_piece('a', 8, Rook(self.__board, Color.BLACK))
+        self.__place_new_piece('b', 8, Knight(self.__board, Color.BLACK))
         self.__place_new_piece('c', 8, Bishop(self.__board, Color.BLACK))
         self.__place_new_piece('e', 8, King(self.__board, Color.BLACK))
         self.__place_new_piece('f', 8, Bishop(self.__board, Color.BLACK))
+        self.__place_new_piece('g', 8, Knight(self.__board, Color.BLACK))
         self.__place_new_piece('h', 8, Rook(self.__board, Color.BLACK))
         self.__place_new_piece('a', 7, Pawn(self.__board, Color.BLACK))
         self.__place_new_piece('b', 7, Pawn(self.__board, Color.BLACK))
