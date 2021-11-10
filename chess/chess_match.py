@@ -1,12 +1,12 @@
 from typing import List, Union
 
+from application.program_constants import ProgramConstants
 from boardgame.board import Board
 from boardgame.piece import Piece
 from boardgame.position import Position
 from chess.chess_exception import ChessException
 from chess.chess_piece import ChessPiece
 from chess.chess_position import ChessPosition
-from chess.chess_constants import ChessConstants
 from chess.color import Color
 from chess.pieces.rook import Rook
 from chess.pieces.king import King
@@ -23,7 +23,7 @@ class ChessMatch(object):
         self.__current_player: Color = Color.WHITE
         self.__pieces_on_the_board: List[Piece] = []
         self.__captured_pieces: List[Piece] = []
-        self.__board = Board(ChessConstants.ROWS, ChessConstants.COLUMNS)
+        self.__board = Board(ProgramConstants.ROWS, ProgramConstants.COLUMNS)
         self.__check: bool = False
         self.__checkmate: bool = False
 
@@ -106,6 +106,28 @@ class ChessMatch(object):
             self.__pieces_on_the_board.remove(captured_piece)
             self.__captured_pieces.append(captured_piece)
 
+        # SPECIAL MOVE - CASTLING (King side)
+        if isinstance(piece, King) and target.column == source.column + 2:
+
+            source_rook: Position = Position(source.row, source.column + 3)
+            target_rook: Position = Position(source.row, source.column + 1)
+
+            rook: ChessPiece = self.__board.remove_piece(source_rook)
+            self.__board.place_piece(rook, target_rook)
+
+            rook.increase_move_count()
+
+        # SPECIAL MOVE - CASTLING (Queen side)
+        if isinstance(piece, King) and target.column == source.column - 2:
+
+            source_rook: Position = Position(source.row, source.column - 4)
+            target_rook: Position = Position(source.row, source.column - 1)
+
+            rook: ChessPiece = self.__board.remove_piece(source_rook)
+            self.__board.place_piece(rook, target_rook)
+
+            rook.increase_move_count()
+
         return captured_piece
 
     def __undo_move(self, source: Position, target: Position, captured_piece: Piece) -> None:
@@ -121,6 +143,28 @@ class ChessMatch(object):
 
             self.__captured_pieces.remove(captured_piece)
             self.__pieces_on_the_board.append(captured_piece)
+
+        # SPECIAL MOVE - CASTLING (King side)
+        if isinstance(piece, King) and target.column == source.column + 2:
+
+            source_rook: Position = Position(source.row, source.column + 3)
+            target_rook: Position = Position(source.row, source.column + 1)
+
+            rook: ChessPiece = self.__board.remove_piece(target_rook)
+            self.__board.place_piece(rook, source_rook)
+
+            rook.decrease_move_count()
+
+        # SPECIAL MOVE - CASTLING (Queen side)
+        if isinstance(piece, King) and target.column == source.column - 2:
+
+            source_rook: Position = Position(source.row, source.column - 4)
+            target_rook: Position = Position(source.row, source.column - 1)
+
+            rook: ChessPiece = self.__board.remove_piece(target_rook)
+            self.__board.place_piece(rook, source_rook)
+
+            rook.decrease_move_count()
 
     def __validate_source_position(self, position: Position) -> None:
 
@@ -217,7 +261,7 @@ class ChessMatch(object):
         self.__place_new_piece('b', 1, Knight(self.__board, Color.WHITE))
         self.__place_new_piece('c', 1, Bishop(self.__board, Color.WHITE))
         self.__place_new_piece('d', 1, Queen(self.__board, Color.WHITE))
-        self.__place_new_piece('e', 1, King(self.__board, Color.WHITE))
+        self.__place_new_piece('e', 1, King(self.__board, Color.WHITE, self))
         self.__place_new_piece('f', 1, Bishop(self.__board, Color.WHITE))
         self.__place_new_piece('g', 1, Knight(self.__board, Color.WHITE))
         self.__place_new_piece('h', 1, Rook(self.__board, Color.WHITE))
@@ -235,7 +279,7 @@ class ChessMatch(object):
         self.__place_new_piece('b', 8, Knight(self.__board, Color.BLACK))
         self.__place_new_piece('c', 8, Bishop(self.__board, Color.BLACK))
         self.__place_new_piece('d', 8, Queen(self.__board, Color.BLACK))
-        self.__place_new_piece('e', 8, King(self.__board, Color.BLACK))
+        self.__place_new_piece('e', 8, King(self.__board, Color.BLACK, self))
         self.__place_new_piece('f', 8, Bishop(self.__board, Color.BLACK))
         self.__place_new_piece('g', 8, Knight(self.__board, Color.BLACK))
         self.__place_new_piece('h', 8, Rook(self.__board, Color.BLACK))

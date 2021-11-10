@@ -1,5 +1,5 @@
+from application.program_constants import ProgramConstants
 from boardgame.position import Position
-from chess.chess_constants import ChessConstants
 from chess.chess_exception import ChessException
 
 
@@ -9,8 +9,8 @@ class ChessPosition(object):
 
     def __init__(self, column: str, row: int) -> None:
 
-        if column < ChessConstants.FIRST_COLUMN or column > ChessConstants.LAST_COLUMN \
-                or row < 1 or row > ChessConstants.ROWS:
+        if column < ProgramConstants.FIRST_COLUMN or column > ProgramConstants.LAST_COLUMN \
+                or row < 1 or row > ProgramConstants.ROWS:
             raise ChessException('Error instantiating ChessPosition. Valid values are from a1 to h8.')
 
         self.__row = row
@@ -29,16 +29,16 @@ class ChessPosition(object):
 
     def to_position(self) -> Position:
 
-        row = ChessConstants.ROWS - self.__row
-        column = self.BOARD_ALPHA.index(self.__column) - self.BOARD_ALPHA.index(ChessConstants.FIRST_COLUMN)
+        row = ProgramConstants.ROWS - self.__row
+        column = self.BOARD_ALPHA.index(self.__column) - self.BOARD_ALPHA.index(ProgramConstants.FIRST_COLUMN)
 
         return Position(row, column)
 
     @staticmethod
     def from_position(position: Position):
 
-        row = ChessConstants.ROWS - position.row
-        column = ChessPosition.BOARD_ALPHA[ChessPosition.BOARD_ALPHA.index(ChessConstants.FIRST_COLUMN)
+        row = ProgramConstants.ROWS - position.row
+        column = ChessPosition.BOARD_ALPHA[ChessPosition.BOARD_ALPHA.index(ProgramConstants.FIRST_COLUMN)
                                            + position.column]
 
         return ChessPosition(column, row)

@@ -3,10 +3,9 @@ from os import system
 
 from chess.chess_piece import ChessPiece
 from chess.chess_position import ChessPosition
-from chess.chess_constants import ChessConstants
 from chess.chess_match import ChessMatch
 from chess.color import Color
-from application.color_constants import ColorConstants
+from application.program_constants import ProgramConstants
 
 
 class UI(object):
@@ -31,7 +30,7 @@ class UI(object):
     @staticmethod
     def print_match(chess_match: ChessMatch, captured: List[ChessPiece]) -> None:
 
-        game_status: str = ChessConstants.NO_CHECK
+        game_status: str = ProgramConstants.NO_CHECK
 
         UI.print_board(chess_match.get_pieces())
 
@@ -43,16 +42,18 @@ class UI(object):
         if not chess_match.checkmate:
             print(f'Waiting player: {chess_match.current_player}')
             if chess_match.check:
-                game_status = ChessConstants.CHECK
+                game_status = ProgramConstants.CHECK
         else:
-            game_status = ChessConstants.CHECKMATE
+            game_status = ProgramConstants.CHECKMATE
 
             player: Color = chess_match.current_player
 
-            print(f'Winner: {ColorConstants.COLOR_YELLOW if player == Color.BLACK else ColorConstants.COLOR_WHITE}'
-                  f'{player}{ColorConstants.RESET}')
+            print(
+                f'Winner: '
+                f'{ProgramConstants.BLACK_PIECE_COLOR if player == Color.BLACK else ProgramConstants.WHITE_PIECE_COLOR}'
+                f'{player}{ProgramConstants.RESET_COLOR}')
 
-        print(f'\nGame status: {ColorConstants.COLOR_RED}{game_status}{ColorConstants.RESET}')
+        print(f'\nGame status: {ProgramConstants.GAME_STATUS_COLOR}{game_status}{ProgramConstants.RESET_COLOR}')
 
     @staticmethod
     def print_board(pieces: List[List[Union[ChessPiece, None]]]) -> None:
@@ -62,7 +63,7 @@ class UI(object):
 
         for i in range(rows):
 
-            print(f'{ColorConstants.COLOR_GREEN}{rows - i} {ColorConstants.RESET}', end='')
+            print(f'{ProgramConstants.INDICATORS_COLOR}{rows - i} {ProgramConstants.RESET_COLOR}', end='')
 
             for j in range(columns):
 
@@ -70,7 +71,7 @@ class UI(object):
 
             print()
 
-        print(f'{ColorConstants.COLOR_GREEN}  a b c d e f g h{ColorConstants.RESET}')
+        print(f'{ProgramConstants.INDICATORS_COLOR}  a b c d e f g h{ProgramConstants.RESET_COLOR}')
 
     @staticmethod
     def print_board_possible_moves(
@@ -81,7 +82,7 @@ class UI(object):
 
         for i in range(rows):
 
-            print(f'{ColorConstants.COLOR_GREEN}{rows - i} {ColorConstants.RESET}', end='')
+            print(f'{ProgramConstants.INDICATORS_COLOR}{rows - i} {ProgramConstants.RESET_COLOR}', end='')
 
             for j in range(columns):
 
@@ -89,21 +90,21 @@ class UI(object):
 
             print()
 
-        print(f'{ColorConstants.COLOR_GREEN}  a b c d e f g h{ColorConstants.RESET}')
+        print(f'{ProgramConstants.INDICATORS_COLOR}  a b c d e f g h{ProgramConstants.RESET_COLOR}')
 
     @staticmethod
     def __print_piece(piece: ChessPiece, background: bool) -> None:
 
         if background:
-            print(ColorConstants.BACKGROUND_DARK_BLUE, end='')
+            print(ProgramConstants.BACKGROUND_COLOR, end='')
 
         if piece is None:
-            print(f'-{ColorConstants.RESET}', end='')
+            print(f'-{ProgramConstants.RESET_COLOR}', end='')
         else:
             if piece.color == Color.WHITE:
-                print(f'{ColorConstants.COLOR_WHITE}{piece}{ColorConstants.RESET}', end='')
+                print(f'{ProgramConstants.WHITE_PIECE_COLOR}{piece}{ProgramConstants.RESET_COLOR}', end='')
             else:
-                print(f'{ColorConstants.COLOR_YELLOW}{piece}{ColorConstants.RESET}', end='')
+                print(f'{ProgramConstants.BLACK_PIECE_COLOR}{piece}{ProgramConstants.RESET_COLOR}', end='')
 
         print(' ', end='')
 
@@ -120,5 +121,5 @@ class UI(object):
             black[i] = str(black[i])
 
         print('Captured pieces:')
-        print(f'{ColorConstants.COLOR_WHITE}White: {", ".join(white)}{ColorConstants.RESET}')
-        print(f'{ColorConstants.COLOR_YELLOW}Black: {", ".join(black)}{ColorConstants.RESET}')
+        print(f'{ProgramConstants.WHITE_PIECE_COLOR}White: {", ".join(white)}{ProgramConstants.RESET_COLOR}')
+        print(f'{ProgramConstants.BLACK_PIECE_COLOR}Black: {", ".join(black)}{ProgramConstants.RESET_COLOR}')
