@@ -124,7 +124,8 @@ class ChessMatch(object):
         if self.promoted is None:
             raise ValueError('There is no piece to be promoted.')
 
-        if not promotion_type == 'B' and not promotion_type == 'N' and not promotion_type == 'R' and not promotion_type == 'Q':
+        if not promotion_type == 'B' and not promotion_type == 'N' and\
+                not promotion_type == 'R' and not promotion_type == 'Q':
             raise ValueError('Invalid type for promotion.')
 
         pos: Position = self.promoted.chess_position().to_position()
