@@ -25,7 +25,7 @@ def main() -> None:
         try:
             UI.clear_screen()
 
-            UI.print_board(chess_match.get_pieces())
+            UI.print_match(chess_match)
 
             source: ChessPosition = UI.read_chess_position('Source: ')
 

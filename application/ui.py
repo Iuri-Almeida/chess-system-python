@@ -3,6 +3,7 @@ from os import system
 
 from chess.chess_piece import ChessPiece
 from chess.chess_position import ChessPosition
+from chess.chess_match import ChessMatch
 from chess.color import Color
 from application.color_constants import ColorConstants
 
@@ -25,6 +26,14 @@ class UI(object):
             return ChessPosition(column, row)
         except RuntimeError:
             raise ValueError('Error reading ChessPosition. Valida values are from a1 to h8.')
+
+    @staticmethod
+    def print_match(chess_match: ChessMatch) -> None:
+
+        UI.print_board(chess_match.get_pieces())
+
+        print(f'\nTurn: {chess_match.turn}')
+        print(f'Waiting player: {chess_match.current_player}')
 
     @staticmethod
     def print_board(pieces: List[List[Union[ChessPiece, None]]]) -> None:

@@ -16,7 +16,17 @@ class ChessMatch(object):
 
     def __init__(self) -> None:
         self.__board = Board(ChessConstants.ROWS, ChessConstants.COLUMNS)
+        self.__turn: int = 1
+        self.__current_player: Color = Color.WHITE
         self.initial_setup()
+
+    @property
+    def turn(self) -> int:
+        return self.__turn
+
+    @property
+    def current_player(self) -> Color:
+        return self.__current_player.name
 
     def get_pieces(self) -> List[List[Union[ChessPiece, None]]]:
 
@@ -53,6 +63,8 @@ class ChessMatch(object):
 
         captured_piece = self.make_move(source, target)
 
+        self.next_turn()
+
         return captured_piece
 
     def make_move(self, source: Position, target: Position) -> Piece:
@@ -69,12 +81,19 @@ class ChessMatch(object):
         if not self.__board.there_is_a_piece(position):
             raise ChessException('There is no piece on source position.')
 
+        if self.__current_player != self.__board.piece_by_position(position).color:
+            raise ChessException('The chosen piece is not yours.')
+
         if not self.__board.piece_by_position(position).is_there_any_possible_move():
             raise ChessException('There is no possible moves for the chosen piece.')
 
     def validate_target_position(self, source: Position, target: Position) -> None:
         if not self.__board.piece_by_position(source).possible_move(target):
             raise ChessException('The chosen piece cannot move to target position.')
+
+    def next_turn(self) -> None:
+        self.__turn += 1
+        self.__current_player = Color.BLACK if self.__current_player == Color.WHITE else Color.WHITE
 
     def place_new_piece(self, column: str, row: int, piece: ChessPiece) -> None:
         self.__board.place_piece(piece, ChessPosition(column, row).to_position())
