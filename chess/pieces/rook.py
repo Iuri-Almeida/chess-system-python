@@ -20,9 +20,9 @@ class Rook(ChessPiece):
         columns: int = self._board.columns
 
         mat: List[List[bool]] = []
-        for i in range(rows):
+        for _ in range(rows):
             row: List[bool] = []
-            for j in range(columns):
+            for _ in range(columns):
                 row.append(False)
             mat.append(row)
 
