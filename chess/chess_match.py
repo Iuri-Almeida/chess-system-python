@@ -26,6 +26,7 @@ class ChessMatch(object):
         self.__board = Board(ProgramConstants.ROWS, ProgramConstants.COLUMNS)
         self.__check: bool = False
         self.__checkmate: bool = False
+        self.__en_passant_vulnerable: Union[ChessPiece, None] = None
 
         self.__initial_setup()
 
@@ -44,6 +45,10 @@ class ChessMatch(object):
     @property
     def checkmate(self) -> bool:
         return self.__checkmate
+
+    @property
+    def en_passant_vulnerable(self) -> Union[ChessPiece, None]:
+        return self.__en_passant_vulnerable
 
     def get_pieces(self) -> List[List[Union[ChessPiece, None]]]:
 
@@ -84,12 +89,20 @@ class ChessMatch(object):
             self.__undo_move(source, target, captured_piece)
             raise ChessException('You cannot put yourself in check.')
 
+        moved_piece: ChessPiece = self.__board.piece_by_position(target)
+
         self.__check = self.__test_check(self.__opponent(self.__current_player))
 
         self.__checkmate = self.__test_checkmate(self.__opponent(self.__current_player))
 
         if not self.checkmate:
             self.__next_turn()
+
+        # SPECIAL MOVE - EN PASSANT
+        if isinstance(moved_piece, Pawn) and (target.row == source.row - 2 or target.row == source.row + 2):
+            self.__en_passant_vulnerable = moved_piece
+        else:
+            self.__en_passant_vulnerable = None
 
         return captured_piece
 
@@ -128,6 +141,18 @@ class ChessMatch(object):
 
             rook.increase_move_count()
 
+        # SPECIAL MOVE - EN PASSANT
+        if isinstance(piece, Pawn) and source.column != target.column and captured_piece is None:
+
+            if piece.color == Color.WHITE:
+                pos_pawn = Position(target.row + 1, target.column)
+            else:
+                pos_pawn = Position(target.row - 1, target.column)
+
+            captured_piece = self.__board.remove_piece(pos_pawn)
+            self.__pieces_on_the_board.remove(captured_piece)
+            self.__captured_pieces.append(captured_piece)
+
         return captured_piece
 
     def __undo_move(self, source: Position, target: Position, captured_piece: Piece) -> None:
@@ -165,6 +190,18 @@ class ChessMatch(object):
             self.__board.place_piece(rook, source_rook)
 
             rook.decrease_move_count()
+
+        # SPECIAL MOVE - EN PASSANT
+        if isinstance(piece, Pawn) and source.column != target.column and captured_piece == self.en_passant_vulnerable:
+
+            pawn: ChessPiece = self.__board.remove_piece(target)
+
+            if piece.color == Color.WHITE:
+                pos_pawn = Position(3, target.column)
+            else:
+                pos_pawn = Position(4, target.column)
+
+            self.__board.place_piece(pawn, pos_pawn)
 
     def __validate_source_position(self, position: Position) -> None:
 
@@ -265,14 +302,14 @@ class ChessMatch(object):
         self.__place_new_piece('f', 1, Bishop(self.__board, Color.WHITE))
         self.__place_new_piece('g', 1, Knight(self.__board, Color.WHITE))
         self.__place_new_piece('h', 1, Rook(self.__board, Color.WHITE))
-        self.__place_new_piece('a', 2, Pawn(self.__board, Color.WHITE))
-        self.__place_new_piece('b', 2, Pawn(self.__board, Color.WHITE))
-        self.__place_new_piece('c', 2, Pawn(self.__board, Color.WHITE))
-        self.__place_new_piece('d', 2, Pawn(self.__board, Color.WHITE))
-        self.__place_new_piece('e', 2, Pawn(self.__board, Color.WHITE))
-        self.__place_new_piece('f', 2, Pawn(self.__board, Color.WHITE))
-        self.__place_new_piece('g', 2, Pawn(self.__board, Color.WHITE))
-        self.__place_new_piece('h', 2, Pawn(self.__board, Color.WHITE))
+        self.__place_new_piece('a', 2, Pawn(self.__board, Color.WHITE, self))
+        self.__place_new_piece('b', 2, Pawn(self.__board, Color.WHITE, self))
+        self.__place_new_piece('c', 2, Pawn(self.__board, Color.WHITE, self))
+        self.__place_new_piece('d', 2, Pawn(self.__board, Color.WHITE, self))
+        self.__place_new_piece('e', 2, Pawn(self.__board, Color.WHITE, self))
+        self.__place_new_piece('f', 2, Pawn(self.__board, Color.WHITE, self))
+        self.__place_new_piece('g', 2, Pawn(self.__board, Color.WHITE, self))
+        self.__place_new_piece('h', 2, Pawn(self.__board, Color.WHITE, self))
 
         # black players
         self.__place_new_piece('a', 8, Rook(self.__board, Color.BLACK))
@@ -283,11 +320,11 @@ class ChessMatch(object):
         self.__place_new_piece('f', 8, Bishop(self.__board, Color.BLACK))
         self.__place_new_piece('g', 8, Knight(self.__board, Color.BLACK))
         self.__place_new_piece('h', 8, Rook(self.__board, Color.BLACK))
-        self.__place_new_piece('a', 7, Pawn(self.__board, Color.BLACK))
-        self.__place_new_piece('b', 7, Pawn(self.__board, Color.BLACK))
-        self.__place_new_piece('c', 7, Pawn(self.__board, Color.BLACK))
-        self.__place_new_piece('d', 7, Pawn(self.__board, Color.BLACK))
-        self.__place_new_piece('e', 7, Pawn(self.__board, Color.BLACK))
-        self.__place_new_piece('f', 7, Pawn(self.__board, Color.BLACK))
-        self.__place_new_piece('g', 7, Pawn(self.__board, Color.BLACK))
-        self.__place_new_piece('h', 7, Pawn(self.__board, Color.BLACK))
+        self.__place_new_piece('a', 7, Pawn(self.__board, Color.BLACK, self))
+        self.__place_new_piece('b', 7, Pawn(self.__board, Color.BLACK, self))
+        self.__place_new_piece('c', 7, Pawn(self.__board, Color.BLACK, self))
+        self.__place_new_piece('d', 7, Pawn(self.__board, Color.BLACK, self))
+        self.__place_new_piece('e', 7, Pawn(self.__board, Color.BLACK, self))
+        self.__place_new_piece('f', 7, Pawn(self.__board, Color.BLACK, self))
+        self.__place_new_piece('g', 7, Pawn(self.__board, Color.BLACK, self))
+        self.__place_new_piece('h', 7, Pawn(self.__board, Color.BLACK, self))

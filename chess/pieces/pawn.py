@@ -1,6 +1,7 @@
 from typing import List
 from abc import ABC
 
+# from chess.chess_match import ChessMatch
 from chess.chess_piece import ChessPiece
 from chess.color import Color
 from boardgame.board import Board
@@ -9,8 +10,9 @@ from boardgame.position import Position
 
 class Pawn(ChessPiece, ABC):
 
-    def __init__(self, board: Board, color: Color) -> None:
+    def __init__(self, board: Board, color: Color, chess_match) -> None:
         super().__init__(board, color)
+        self.__chess_match = chess_match
 
     def __str__(self) -> str:
         return 'P'
@@ -59,6 +61,21 @@ class Pawn(ChessPiece, ABC):
             if self._board.position_exists_by_position(aux) and self._is_there_opponent_piece(aux):
                 mat[aux.row][aux.column] = True
 
+            # SPECIAL MOVE - EN PASSANT
+            if row == 3:
+
+                left_opponent: Position = Position(row, column - 1)
+                if self._board.position_exists_by_position(left_opponent) and\
+                    self._is_there_opponent_piece(left_opponent) and\
+                        self._board.piece_by_position(left_opponent) == self.__chess_match.en_passant_vulnerable:
+                    mat[left_opponent.row - 1][left_opponent.column] = True
+
+                right_opponent: Position = Position(row, column + 1)
+                if self._board.position_exists_by_position(right_opponent) and\
+                    self._is_there_opponent_piece(right_opponent) and\
+                        self._board.piece_by_position(right_opponent) == self.__chess_match.en_passant_vulnerable:
+                    mat[right_opponent.row - 1][right_opponent.column] = True
+
         else:
 
             # down one
@@ -83,5 +100,20 @@ class Pawn(ChessPiece, ABC):
             aux.set_values(row + 1, column - 1)
             if self._board.position_exists_by_position(aux) and self._is_there_opponent_piece(aux):
                 mat[aux.row][aux.column] = True
+
+            # SPECIAL MOVE - EN PASSANT
+            if row == 4:
+
+                left_opponent: Position = Position(row, column - 1)
+                if self._board.position_exists_by_position(left_opponent) and \
+                        self._is_there_opponent_piece(left_opponent) and \
+                        self._board.piece_by_position(left_opponent) == self.__chess_match.en_passant_vulnerable:
+                    mat[left_opponent.row + 1][left_opponent.column] = True
+
+                right_opponent: Position = Position(row, column + 1)
+                if self._board.position_exists_by_position(right_opponent) and \
+                        self._is_there_opponent_piece(right_opponent) and \
+                        self._board.piece_by_position(right_opponent) == self.__chess_match.en_passant_vulnerable:
+                    mat[right_opponent.row + 1][right_opponent.column] = True
 
         return mat
