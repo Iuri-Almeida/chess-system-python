@@ -94,6 +94,8 @@ class ChessMatch(object):
         piece: Piece = self.__board.remove_piece(source)
         captured_piece: Piece = self.__board.remove_piece(target)
 
+        piece.increase_move_count()
+
         self.__board.place_piece(piece, target)
 
         if captured_piece is not None:
@@ -106,6 +108,8 @@ class ChessMatch(object):
 
         piece: Piece = self.__board.remove_piece(target)
         self.__board.place_piece(piece, source)
+
+        piece.decrease_move_count()
 
         if captured_piece is not None:
 
