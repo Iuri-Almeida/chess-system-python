@@ -15,9 +15,9 @@ class Board(object):
         self.__rows = rows
         self.__columns = columns
         self.__pieces: List[List[Union[Piece, None]]] = []
-        for i in range(rows):
+        for _ in range(rows):
             row = []
-            for j in range(columns):
+            for _ in range(columns):
                 row.append(None)
             self.__pieces.append(row)
 
@@ -48,8 +48,8 @@ class Board(object):
         if self.there_is_a_piece(position):
             raise BoardException(f'There is already a piece on position: {position}')
 
-        row = position.row
-        column = position.column
+        row: int = position.row
+        column: int = position.column
 
         self.__pieces[row][column] = piece
         piece._position = position
@@ -63,6 +63,7 @@ class Board(object):
             return None
 
         piece: Piece = self.piece_by_position(position)
+
         piece._position = None
 
         row: int = position.row

@@ -24,13 +24,14 @@ class ChessMatch(object):
     def __init__(self) -> None:
         self.__turn: int = 1
         self.__current_player: Color = Color.WHITE
-        self.__pieces_on_the_board: List[Piece] = []
-        self.__captured_pieces: List[Piece] = []
         self.__board = Board(ProgramConstants.ROWS, ProgramConstants.COLUMNS)
         self.__check: bool = False
         self.__checkmate: bool = False
         self.__en_passant_vulnerable: Union[ChessPiece, None] = None
         self.__promoted: Union[ChessPiece, None] = None
+
+        self.__pieces_on_the_board: List[Piece] = []
+        self.__captured_pieces: List[Piece] = []
 
         self.__initial_setup()
 
@@ -64,9 +65,9 @@ class ChessMatch(object):
         columns = self.__board.columns
 
         pieces: List[List[Union[ChessPiece, None]]] = []
-        for i in range(rows):
+        for _ in range(rows):
             row = []
-            for j in range(columns):
+            for _ in range(columns):
                 row.append(None)
             pieces.append(row)
 
@@ -77,6 +78,7 @@ class ChessMatch(object):
         return pieces
 
     def possible_moves(self, source_position: ChessPosition) -> List[List[bool]]:
+
         position: Position = source_position.to_position()
 
         self.__validate_source_position(position)
@@ -288,8 +290,7 @@ class ChessMatch(object):
 
         king_position: Position = self.__king(color).chess_position().to_position()
 
-        opponent_pieces: List[Piece] = list(filter(lambda x: x.color == self.__opponent(color),
-                                                   self.__pieces_on_the_board))
+        opponent_pieces: List[Piece] = [x for x in self.__pieces_on_the_board if x.color == self.__opponent(color)]
 
         for piece in opponent_pieces:
 
@@ -309,7 +310,7 @@ class ChessMatch(object):
         if not self.__test_check(color):
             return False
 
-        pieces: List[Piece] = list(filter(lambda x: x.color == color, self.__pieces_on_the_board))
+        pieces: List[Piece] = [x for x in self.__pieces_on_the_board if x.color == color]
 
         for piece in pieces:
 
@@ -332,7 +333,7 @@ class ChessMatch(object):
                         if not test_check:
                             return False
 
-            return True
+        return True
 
     def __place_new_piece(self, column: str, row: int, piece: ChessPiece) -> None:
         self.__board.place_piece(piece, ChessPosition(column, row).to_position())
