@@ -22,3 +22,7 @@ class Position(object):
     @column.setter
     def column(self, new_column: int) -> None:
         self.__column = new_column
+
+    def set_values(self, row: int, column: int) -> None:
+        self.row = row
+        self.column = column

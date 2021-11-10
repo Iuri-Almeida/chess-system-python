@@ -42,6 +42,7 @@ class ChessMatch(object):
         target: Position = target_position.to_position()
 
         self.validate_source_position(source)
+        self.validate_target_position(source, target)
 
         captured_piece = self.make_move(source, target)
 
@@ -63,6 +64,10 @@ class ChessMatch(object):
 
         if not self.__board.piece_by_position(position).is_there_any_possible_move():
             raise ChessException('There is no possible moves for the chosen piece.')
+
+    def validate_target_position(self, source: Position, target: Position) -> None:
+        if not self.__board.piece_by_position(source).possible_move(target):
+            raise ChessException('The chosen piece cannot move to target position.')
 
     def place_new_piece(self, column: str, row: int, piece: ChessPiece) -> None:
         self.__board.place_piece(piece, ChessPosition(column, row).to_position())
