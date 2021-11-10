@@ -61,6 +61,9 @@ class ChessMatch(object):
         if not self.__board.there_is_a_piece(position):
             raise ChessException('There is no piece on source position.')
 
+        if not self.__board.piece_by_position(position).is_there_any_possible_move():
+            raise ChessException('There is no possible moves for the chosen piece.')
+
     def place_new_piece(self, column: str, row: int, piece: ChessPiece) -> None:
         self.__board.place_piece(piece, ChessPosition(column, row).to_position())
 

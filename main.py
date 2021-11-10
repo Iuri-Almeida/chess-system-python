@@ -32,7 +32,8 @@ def main() -> None:
 
             captured_piece: ChessPiece = chess_match.perform_chess_move(source, target)
 
-        except (ChessException, ValueError):
+        except (ChessException, ValueError) as e:
+            print(e)
             input('\nClick ENTER to continue.')
 
 
