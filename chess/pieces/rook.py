@@ -38,7 +38,7 @@ class Rook(ChessPiece):
         while self._board.position_exists_by_position(aux) and not self._board.there_is_a_piece(aux):
             mat[aux.row][aux.column] = True
             aux.row -= 1
-        if self._board.position_exists_by_position(aux) and self.is_there_opponent_piece(aux):
+        if self._board.position_exists_by_position(aux) and self._is_there_opponent_piece(aux):
             mat[aux.row][aux.column] = True
 
         # right
@@ -46,7 +46,7 @@ class Rook(ChessPiece):
         while self._board.position_exists_by_position(aux) and not self._board.there_is_a_piece(aux):
             mat[aux.row][aux.column] = True
             aux.column += 1
-        if self._board.position_exists_by_position(aux) and self.is_there_opponent_piece(aux):
+        if self._board.position_exists_by_position(aux) and self._is_there_opponent_piece(aux):
             mat[aux.row][aux.column] = True
 
         # down
@@ -54,7 +54,7 @@ class Rook(ChessPiece):
         while self._board.position_exists_by_position(aux) and not self._board.there_is_a_piece(aux):
             mat[aux.row][aux.column] = True
             aux.row += 1
-        if self._board.position_exists_by_position(aux) and self.is_there_opponent_piece(aux):
+        if self._board.position_exists_by_position(aux) and self._is_there_opponent_piece(aux):
             mat[aux.row][aux.column] = True
 
         # left
@@ -62,7 +62,7 @@ class Rook(ChessPiece):
         while self._board.position_exists_by_position(aux) and not self._board.there_is_a_piece(aux):
             mat[aux.row][aux.column] = True
             aux.column -= 1
-        if self._board.position_exists_by_position(aux) and self.is_there_opponent_piece(aux):
+        if self._board.position_exists_by_position(aux) and self._is_there_opponent_piece(aux):
             mat[aux.row][aux.column] = True
 
         return mat

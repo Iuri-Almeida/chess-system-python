@@ -38,6 +38,8 @@ class UI(object):
         print(f'\nTurn: {chess_match.turn}')
         print(f'Waiting player: {chess_match.current_player}')
 
+        print(f'\nGame status: {"CHECK!" if chess_match.check else "NO CHECK!"}')
+
     @staticmethod
     def print_board(pieces: List[List[Union[ChessPiece, None]]]) -> None:
 

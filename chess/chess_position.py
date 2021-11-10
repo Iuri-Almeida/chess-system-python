@@ -5,6 +5,8 @@ from chess.chess_exception import ChessException
 
 class ChessPosition(object):
 
+    BOARD_ALPHA = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
+
     def __init__(self, column: str, row: int) -> None:
 
         if column < ChessConstants.FIRST_COLUMN or column > ChessConstants.LAST_COLUMN \
@@ -28,8 +30,7 @@ class ChessPosition(object):
     def to_position(self) -> Position:
 
         row = ChessConstants.ROWS - self.__row
-        board_alpha = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
-        column = board_alpha.index(self.__column) - board_alpha.index(ChessConstants.FIRST_COLUMN)
+        column = self.BOARD_ALPHA.index(self.__column) - self.BOARD_ALPHA.index(ChessConstants.FIRST_COLUMN)
 
         return Position(row, column)
 
@@ -37,7 +38,7 @@ class ChessPosition(object):
     def from_position(position: Position):
 
         row = ChessConstants.ROWS - position.row
-        board_alpha = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
-        column = board_alpha[board_alpha.index(ChessConstants.FIRST_COLUMN) - position.column]
+        column = ChessPosition.BOARD_ALPHA[ChessPosition.BOARD_ALPHA.index(ChessConstants.FIRST_COLUMN)
+                                           + position.column]
 
         return ChessPosition(column, row)

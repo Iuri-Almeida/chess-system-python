@@ -36,46 +36,46 @@ class King(ChessPiece, ABC):
 
         # up
         aux.set_values(row - 1, column)
-        if self._board.position_exists_by_position(aux) and self.can_move(aux):
+        if self._board.position_exists_by_position(aux) and self.__can_move(aux):
             mat[aux.row][aux.column] = True
 
         # right-up
         aux.set_values(row - 1, column + 1)
-        if self._board.position_exists_by_position(aux) and self.can_move(aux):
+        if self._board.position_exists_by_position(aux) and self.__can_move(aux):
             mat[aux.row][aux.column] = True
 
         # right
         aux.set_values(row, column + 1)
-        if self._board.position_exists_by_position(aux) and self.can_move(aux):
+        if self._board.position_exists_by_position(aux) and self.__can_move(aux):
             mat[aux.row][aux.column] = True
 
         # right-down
         aux.set_values(row + 1, column + 1)
-        if self._board.position_exists_by_position(aux) and self.can_move(aux):
+        if self._board.position_exists_by_position(aux) and self.__can_move(aux):
             mat[aux.row][aux.column] = True
 
         # down
         aux.set_values(row + 1, column)
-        if self._board.position_exists_by_position(aux) and self.can_move(aux):
+        if self._board.position_exists_by_position(aux) and self.__can_move(aux):
             mat[aux.row][aux.column] = True
 
         # left-down
         aux.set_values(row + 1, column - 1)
-        if self._board.position_exists_by_position(aux) and self.can_move(aux):
+        if self._board.position_exists_by_position(aux) and self.__can_move(aux):
             mat[aux.row][aux.column] = True
 
         # left
         aux.set_values(row, column - 1)
-        if self._board.position_exists_by_position(aux) and self.can_move(aux):
+        if self._board.position_exists_by_position(aux) and self.__can_move(aux):
             mat[aux.row][aux.column] = True
 
         # left-up
         aux.set_values(row - 1, column - 1)
-        if self._board.position_exists_by_position(aux) and self.can_move(aux):
+        if self._board.position_exists_by_position(aux) and self.__can_move(aux):
             mat[aux.row][aux.column] = True
 
         return mat
 
-    def can_move(self, position: Position) -> bool:
+    def __can_move(self, position: Position) -> bool:
         piece: ChessPiece = self._board.piece_by_position(position)
         return piece is None or piece.color != self.color

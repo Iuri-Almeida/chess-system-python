@@ -15,11 +15,12 @@ from chess.chess_constants import ChessConstants
 class ChessMatch(object):
 
     def __init__(self) -> None:
-        self.__board = Board(ChessConstants.ROWS, ChessConstants.COLUMNS)
         self.__turn: int = 1
         self.__current_player: Color = Color.WHITE
         self.__pieces_on_the_board: List[Piece] = []
         self.__captured_pieces: List[Piece] = []
+        self.__board = Board(ChessConstants.ROWS, ChessConstants.COLUMNS)
+        self.__check: bool = False
 
         self.__initial_setup()
 
@@ -30,6 +31,10 @@ class ChessMatch(object):
     @property
     def current_player(self) -> Color:
         return self.__current_player.name
+
+    @property
+    def check(self) -> bool:
+        return self.__check
 
     def get_pieces(self) -> List[List[Union[ChessPiece, None]]]:
 
@@ -66,6 +71,12 @@ class ChessMatch(object):
 
         captured_piece = self.__make_move(source, target)
 
+        if self.__test_check(self.__current_player):
+            self.__undo_move(source, target, captured_piece)
+            raise ChessException('You cannot put yourself in check.')
+
+        self.__check = self.__test_check(self.__opponent(self.__current_player))
+
         self.__next_turn()
 
         return captured_piece
@@ -82,6 +93,18 @@ class ChessMatch(object):
             self.__captured_pieces.append(captured_piece)
 
         return captured_piece
+
+    def __undo_move(self, source: Position, target: Position, captured_piece: Piece) -> None:
+
+        piece: Piece = self.__board.remove_piece(target)
+        self.__board.place_piece(piece, source)
+
+        if captured_piece is not None:
+
+            self.__board.place_piece(captured_piece, target)
+
+            self.__captured_pieces.remove(captured_piece)
+            self.__pieces_on_the_board.append(captured_piece)
 
     def __validate_source_position(self, position: Position) -> None:
 
@@ -101,6 +124,40 @@ class ChessMatch(object):
     def __next_turn(self) -> None:
         self.__turn += 1
         self.__current_player = Color.BLACK if self.__current_player == Color.WHITE else Color.WHITE
+
+    @staticmethod
+    def __opponent(color: Color) -> Color:
+        return Color.BLACK if color == Color.WHITE else Color.WHITE
+
+    def __king(self, color: Color) -> ChessPiece:
+
+        pieces: List[Piece] = list(filter(lambda x: x.color == color, self.__pieces_on_the_board))
+
+        for piece in pieces:
+            if isinstance(piece, King):
+                return piece
+
+        raise ValueError(f'There is no {color.name} king on the board.')
+
+    def __test_check(self, color: Color) -> bool:
+
+        king_position: Position = self.__king(color).chess_position().to_position()
+
+        opponent_pieces: List[Piece] = list(filter(lambda x: x.color == self.__opponent(color),
+                                                   self.__pieces_on_the_board))
+
+        for piece in opponent_pieces:
+
+            mat: List[List[bool]] = piece.possible_moves()
+
+            # king position
+            row: int = king_position.row
+            column: int = king_position.column
+
+            if mat[row][column]:
+                return True
+
+        return False
 
     def __place_new_piece(self, column: str, row: int, piece: ChessPiece) -> None:
         self.__board.place_piece(piece, ChessPosition(column, row).to_position())

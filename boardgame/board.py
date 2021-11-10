@@ -32,7 +32,7 @@ class Board(object):
 
     def piece_by_row_and_column(self, row: int, column: int) -> Union[Piece, None]:
 
-        if not self.position_exists(row, column):
+        if not self.__position_exists(row, column):
             raise BoardException('Position not on the board.')
 
         return self.__pieces[row][column]
@@ -73,11 +73,11 @@ class Board(object):
 
         return piece
 
-    def position_exists(self, row: int, column: int) -> bool:
+    def __position_exists(self, row: int, column: int) -> bool:
         return 0 <= row < self.__rows and 0 <= column < self.__columns
 
     def position_exists_by_position(self, position: Position) -> bool:
-        return self.position_exists(position.row, position.column)
+        return self.__position_exists(position.row, position.column)
 
     def there_is_a_piece(self, position: Position) -> bool:
 
