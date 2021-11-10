@@ -52,7 +52,7 @@ class UI(object):
             print(f'Winner: {ColorConstants.COLOR_YELLOW if player == Color.BLACK else ColorConstants.COLOR_WHITE}'
                   f'{player}{ColorConstants.RESET}')
 
-        print(f'\nGame status: {game_status}')
+        print(f'\nGame status: {ColorConstants.COLOR_RED}{game_status}{ColorConstants.RESET}')
 
     @staticmethod
     def print_board(pieces: List[List[Union[ChessPiece, None]]]) -> None:
