@@ -1,5 +1,7 @@
 from application.program_constants import ProgramConstants
+
 from boardgame.position import Position
+
 from chess.chess_exception import ChessException
 
 

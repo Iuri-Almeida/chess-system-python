@@ -1,8 +1,8 @@
 from typing import List, Union
 from abc import ABC, abstractmethod
 
-from boardgame.position import Position
 # from boardgame.board import Board
+from boardgame.position import Position
 
 
 class Piece(ABC):

@@ -1,11 +1,12 @@
 from typing import List, Union
 from os import system
 
+from application.program_constants import ProgramConstants
+
+from chess.chess_match import ChessMatch
 from chess.chess_piece import ChessPiece
 from chess.chess_position import ChessPosition
-from chess.chess_match import ChessMatch
 from chess.color import Color
-from application.program_constants import ProgramConstants
 
 
 class UI(object):

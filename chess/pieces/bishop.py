@@ -1,10 +1,11 @@
 from typing import List
 from abc import ABC
 
-from chess.chess_piece import ChessPiece
-from chess.color import Color
 from boardgame.board import Board
 from boardgame.position import Position
+
+from chess.chess_piece import ChessPiece
+from chess.color import Color
 
 
 class Bishop(ChessPiece, ABC):

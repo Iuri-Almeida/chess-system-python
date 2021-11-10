@@ -1,9 +1,8 @@
 from typing import List, Union
 
+from boardgame.board_exception import BoardException
 from boardgame.piece import Piece
 from boardgame.position import Position
-
-from boardgame.board_exception import BoardException
 
 
 class Board(object):

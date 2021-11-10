@@ -1,8 +1,9 @@
 from abc import ABC
 
-from boardgame.piece import Piece
 from boardgame.board import Board
+from boardgame.piece import Piece
 from boardgame.position import Position
+
 from chess.chess_position import ChessPosition
 from chess.color import Color
 
