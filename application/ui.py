@@ -29,8 +29,8 @@ class UI(object):
     @staticmethod
     def print_board(pieces: List[List[Union[ChessPiece, None]]]) -> None:
 
-        rows = len(pieces)
-        columns = len(pieces[0])
+        rows: int = len(pieces)
+        columns: int = len(pieces[0])
 
         for i in range(rows):
 
@@ -38,20 +38,42 @@ class UI(object):
 
             for j in range(columns):
 
-                UI.print_piece(pieces[i][j])
+                UI.print_piece(pieces[i][j], False)
 
             print()
 
         print('  a b c d e f g h')
 
     @staticmethod
-    def print_piece(piece: ChessPiece) -> None:
+    def print_board_possible_moves(
+            pieces: List[List[Union[ChessPiece, None]]], possible_moves: List[List[bool]]) -> None:
+
+        rows: int = len(pieces)
+        columns: int = len(pieces[0])
+
+        for i in range(rows):
+
+            print(f'{rows - i} ', end='')
+
+            for j in range(columns):
+
+                UI.print_piece(pieces[i][j], possible_moves[i][j])
+
+            print()
+
+        print('  a b c d e f g h')
+
+    @staticmethod
+    def print_piece(piece: ChessPiece, background: bool) -> None:
+
+        if background:
+            print(ColorConstants.BACKGROUND_DARK_BLUE, end='')
 
         if piece is None:
-            print('-', end='')
+            print(f'-{ColorConstants.RESET}', end='')
         else:
             if piece.color == Color.WHITE:
-                print(piece, end='')
+                print(f'{piece}{ColorConstants.RESET}', end='')
             else:
                 print(f'{ColorConstants.COLOR_YELLOW}{piece}{ColorConstants.RESET}', end='')
 

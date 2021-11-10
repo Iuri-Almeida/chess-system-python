@@ -28,6 +28,11 @@ def main() -> None:
             UI.print_board(chess_match.get_pieces())
 
             source: ChessPosition = UI.read_chess_position('Source: ')
+
+            possible_moves = chess_match.possible_moves(source)
+            UI.clear_screen()
+            UI.print_board_possible_moves(chess_match.get_pieces(), possible_moves)
+
             target: ChessPosition = UI.read_chess_position('Target: ')
 
             captured_piece: ChessPiece = chess_match.perform_chess_move(source, target)

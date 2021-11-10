@@ -36,6 +36,13 @@ class ChessMatch(object):
 
         return pieces
 
+    def possible_moves(self, source_position: ChessPosition) -> List[List[bool]]:
+        position: Position = source_position.to_position()
+
+        self.validate_source_position(position)
+
+        return self.__board.piece_by_position(position).possible_moves()
+
     def perform_chess_move(self, source_position: ChessPosition, target_position: ChessPosition) -> ChessPiece:
 
         source: Position = source_position.to_position()
