@@ -16,10 +16,15 @@ class UI(object):
         system('clear')
 
     @staticmethod
-    def read_chess_position(txt: str) -> ChessPosition:
+    def read_chess_position(txt: str, chess_match: ChessMatch) -> ChessPosition:
 
         try:
-            s: str = input(txt).lower()
+
+            player: Color = chess_match.current_player
+
+            s: str = input(f'{txt}'
+            f'{ProgramConstants.BLACK_PIECE_COLOR if player == Color.BLACK else ProgramConstants.WHITE_PIECE_COLOR}').lower()
+            print(ProgramConstants.RESET_COLOR)
 
             column: str = s[0]
             row: int = int(s[1:])
@@ -38,10 +43,17 @@ class UI(object):
         print()
         UI.__print_captured_pieces(captured)
 
-        print(f'\nTurn: {chess_match.turn}')
+        print(f'\nTurn: {ProgramConstants.TURN_COLOR}{chess_match.turn}{ProgramConstants.RESET_COLOR}')
 
         if not chess_match.checkmate:
-            print(f'Waiting player: {chess_match.current_player}')
+
+            player: Color = chess_match.current_player
+
+            print(
+                f'Waiting player: '
+                f'{ProgramConstants.BLACK_PIECE_COLOR if player == Color.BLACK else ProgramConstants.WHITE_PIECE_COLOR}'
+                f'{player.name}{ProgramConstants.RESET_COLOR}')
+            
             if chess_match.check:
                 game_status = ProgramConstants.CHECK
         else:
@@ -52,7 +64,7 @@ class UI(object):
             print(
                 f'Winner: '
                 f'{ProgramConstants.BLACK_PIECE_COLOR if player == Color.BLACK else ProgramConstants.WHITE_PIECE_COLOR}'
-                f'{player}{ProgramConstants.RESET_COLOR}')
+                f'{player.name}{ProgramConstants.RESET_COLOR}')
 
         print(f'\nGame status: {ProgramConstants.GAME_STATUS_COLOR}{game_status}{ProgramConstants.RESET_COLOR}')
 

@@ -41,7 +41,7 @@ class ChessMatch(object):
 
     @property
     def current_player(self) -> Color:
-        return self.__current_player.name
+        return self.__current_player
 
     @property
     def check(self) -> bool:

@@ -20,4 +20,5 @@ class ProgramConstants(object):
     BACKGROUND_COLOR = ANSIColorConstants.ANSI_BLUE_BACKGROUND
     INDICATORS_COLOR = ANSIColorConstants.ANSI_GREEN
     GAME_STATUS_COLOR = ANSIColorConstants.ANSI_RED
+    TURN_COLOR = ANSIColorConstants.ANSI_CYAN
     RESET_COLOR = ANSIColorConstants.ANSI_RESET
