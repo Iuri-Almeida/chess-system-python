@@ -1,4 +1,4 @@
-from typing import List, Union
+from typing import List, Optional
 
 from boardgame.board_exception import BoardException
 from boardgame.piece import Piece
@@ -14,7 +14,7 @@ class Board(object):
 
         self.__rows = rows
         self.__columns = columns
-        self.__pieces: List[List[Union[Piece, None]]] = []
+        self.__pieces: List[List[Optional[Piece]]] = []
         for _ in range(rows):
             row = []
             for _ in range(columns):
@@ -29,14 +29,14 @@ class Board(object):
     def columns(self) -> int:
         return self.__columns
 
-    def piece_by_row_and_column(self, row: int, column: int) -> Union[Piece, None]:
+    def piece_by_row_and_column(self, row: int, column: int) -> Optional[Piece]:
 
         if not self.__position_exists(row, column):
             raise BoardException('Position not on the board.')
 
         return self.__pieces[row][column]
 
-    def piece_by_position(self, position: Position) -> Union[Piece, None]:
+    def piece_by_position(self, position: Position) -> Optional[Piece]:
 
         if not self.position_exists_by_position(position):
             raise BoardException('Position not on the board.')
@@ -54,7 +54,7 @@ class Board(object):
         self.__pieces[row][column] = piece
         piece._position = position
 
-    def remove_piece(self, position: Position) -> Union[Piece, None]:
+    def remove_piece(self, position: Position) -> Optional[Piece]:
 
         if not self.position_exists_by_position(position):
             raise BoardException('Position not on the board.')

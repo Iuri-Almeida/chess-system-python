@@ -1,4 +1,4 @@
-from typing import List, Union
+from typing import List, Optional
 from os import system
 
 from application.program_constants import ProgramConstants
@@ -57,7 +57,7 @@ class UI(object):
         print(f'\nGame status: {ProgramConstants.GAME_STATUS_COLOR}{game_status}{ProgramConstants.RESET_COLOR}')
 
     @staticmethod
-    def print_board(pieces: List[List[Union[ChessPiece, None]]]) -> None:
+    def print_board(pieces: List[List[Optional[ChessPiece]]]) -> None:
 
         rows: int = len(pieces)
         columns: int = len(pieces[0])
@@ -76,7 +76,7 @@ class UI(object):
 
     @staticmethod
     def print_board_possible_moves(
-            pieces: List[List[Union[ChessPiece, None]]], possible_moves: List[List[bool]]) -> None:
+            pieces: List[List[Optional[ChessPiece]]], possible_moves: List[List[bool]]) -> None:
 
         rows: int = len(pieces)
         columns: int = len(pieces[0])

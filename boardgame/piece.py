@@ -1,4 +1,4 @@
-from typing import List, Union
+from typing import List, Optional
 from abc import ABC, abstractmethod
 
 # from boardgame.board import Board
@@ -9,7 +9,7 @@ class Piece(ABC):
 
     def __init__(self, board) -> None:
         self.__board = board
-        self._position: Union[Position, None] = None
+        self._position: Optional[Position] = None
 
     @property
     def _board(self):

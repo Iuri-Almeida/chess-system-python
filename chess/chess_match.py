@@ -1,4 +1,4 @@
-from typing import List, Union
+from typing import cast, List, Optional
 
 from application.program_constants import ProgramConstants
 
@@ -27,8 +27,8 @@ class ChessMatch(object):
         self.__board = Board(ProgramConstants.ROWS, ProgramConstants.COLUMNS)
         self.__check: bool = False
         self.__checkmate: bool = False
-        self.__en_passant_vulnerable: Union[ChessPiece, None] = None
-        self.__promoted: Union[ChessPiece, None] = None
+        self.__en_passant_vulnerable: Optional[ChessPiece] = None
+        self.__promoted: Optional[ChessPiece] = None
 
         self.__pieces_on_the_board: List[Piece] = []
         self.__captured_pieces: List[Piece] = []
@@ -52,19 +52,19 @@ class ChessMatch(object):
         return self.__checkmate
 
     @property
-    def en_passant_vulnerable(self) -> Union[ChessPiece, None]:
+    def en_passant_vulnerable(self) -> Optional[ChessPiece]:
         return self.__en_passant_vulnerable
 
     @property
-    def promoted(self) -> Union[ChessPiece, None]:
+    def promoted(self) -> Optional[ChessPiece]:
         return self.__promoted
 
-    def get_pieces(self) -> List[List[Union[ChessPiece, None]]]:
+    def get_pieces(self) -> List[List[Optional[ChessPiece]]]:
 
         rows = self.__board.rows
         columns = self.__board.columns
 
-        pieces: List[List[Union[ChessPiece, None]]] = []
+        pieces: List[List[Optional[ChessPiece]]] = []
         for _ in range(rows):
             row = []
             for _ in range(columns):
@@ -99,7 +99,7 @@ class ChessMatch(object):
             self.__undo_move(source, target, captured_piece)
             raise ChessException('You cannot put yourself in check.')
 
-        moved_piece: ChessPiece = self.__board.piece_by_position(target)
+        moved_piece: ChessPiece = cast(ChessPiece, self.__board.piece_by_position(target))
 
         # SPECIAL MOVE - PROMOTION
         self.__promoted = None
@@ -122,7 +122,7 @@ class ChessMatch(object):
         else:
             self.__en_passant_vulnerable = None
 
-        return captured_piece
+        return cast(ChessPiece, captured_piece)
 
     def replace_promoted_piece(self, promotion_type: str) -> ChessPiece:
 
@@ -158,7 +158,7 @@ class ChessMatch(object):
 
     def __make_move(self, source: Position, target: Position) -> Piece:
 
-        piece: Piece = self.__board.remove_piece(source)
+        piece: ChessPiece = cast(ChessPiece, self.__board.remove_piece(source))
         captured_piece: Piece = self.__board.remove_piece(target)
 
         piece.increase_move_count()
@@ -175,7 +175,7 @@ class ChessMatch(object):
             source_rook: Position = Position(source.row, source.column + 3)
             target_rook: Position = Position(source.row, source.column + 1)
 
-            rook: ChessPiece = self.__board.remove_piece(source_rook)
+            rook: ChessPiece = cast(ChessPiece, self.__board.remove_piece(source_rook))
             self.__board.place_piece(rook, target_rook)
 
             rook.increase_move_count()
@@ -186,7 +186,7 @@ class ChessMatch(object):
             source_rook: Position = Position(source.row, source.column - 4)
             target_rook: Position = Position(source.row, source.column - 1)
 
-            rook: ChessPiece = self.__board.remove_piece(source_rook)
+            rook: ChessPiece = cast(ChessPiece, self.__board.remove_piece(source_rook))
             self.__board.place_piece(rook, target_rook)
 
             rook.increase_move_count()
@@ -207,7 +207,7 @@ class ChessMatch(object):
 
     def __undo_move(self, source: Position, target: Position, captured_piece: Piece) -> None:
 
-        piece: Piece = self.__board.remove_piece(target)
+        piece: ChessPiece = cast(ChessPiece, self.__board.remove_piece(target))
         self.__board.place_piece(piece, source)
 
         piece.decrease_move_count()
@@ -225,7 +225,7 @@ class ChessMatch(object):
             source_rook: Position = Position(source.row, source.column + 3)
             target_rook: Position = Position(source.row, source.column + 1)
 
-            rook: ChessPiece = self.__board.remove_piece(target_rook)
+            rook: ChessPiece = cast(ChessPiece, self.__board.remove_piece(target_rook))
             self.__board.place_piece(rook, source_rook)
 
             rook.decrease_move_count()
@@ -236,7 +236,7 @@ class ChessMatch(object):
             source_rook: Position = Position(source.row, source.column - 4)
             target_rook: Position = Position(source.row, source.column - 1)
 
-            rook: ChessPiece = self.__board.remove_piece(target_rook)
+            rook: ChessPiece = cast(ChessPiece, self.__board.remove_piece(target_rook))
             self.__board.place_piece(rook, source_rook)
 
             rook.decrease_move_count()
@@ -244,7 +244,7 @@ class ChessMatch(object):
         # SPECIAL MOVE - EN PASSANT
         if isinstance(piece, Pawn) and source.column != target.column and captured_piece == self.en_passant_vulnerable:
 
-            pawn: ChessPiece = self.__board.remove_piece(target)
+            pawn: ChessPiece = cast(ChessPiece, self.__board.remove_piece(target))
 
             if piece.color == Color.WHITE:
                 pos_pawn = Position(3, target.column)
@@ -258,7 +258,7 @@ class ChessMatch(object):
         if not self.__board.there_is_a_piece(position):
             raise ChessException('There is no piece on source position.')
 
-        if self.__current_player != self.__board.piece_by_position(position).color:
+        if self.__current_player != cast(ChessPiece, self.__board.piece_by_position(position)).color:
             raise ChessException('The chosen piece is not yours.')
 
         if not self.__board.piece_by_position(position).is_there_any_possible_move():
@@ -290,7 +290,8 @@ class ChessMatch(object):
 
         king_position: Position = self.__king(color).chess_position().to_position()
 
-        opponent_pieces: List[Piece] = [x for x in self.__pieces_on_the_board if x.color == self.__opponent(color)]
+        opponent_pieces: List[Piece] = [x for x in self.__pieces_on_the_board
+                                        if cast(ChessPiece, x).color == self.__opponent(color)]
 
         for piece in opponent_pieces:
 
@@ -310,7 +311,8 @@ class ChessMatch(object):
         if not self.__test_check(color):
             return False
 
-        pieces: List[Piece] = [x for x in self.__pieces_on_the_board if x.color == color]
+        pieces: List[ChessPiece] = [cast(ChessPiece, x) for x in self.__pieces_on_the_board
+                                    if cast(ChessPiece, x).color == color]
 
         for piece in pieces:
 
